@@ -1,56 +1,28 @@
-import { getToken } from "next-auth/jwt";
-import uploadVideo from "@/utils/youtube.js";
-import upload from "@/utils/multer.js";
-import fs from 'fs';
-import path from 'path';
+// import { getToken } from "next-auth/jwt";
+// import uploadVideoYoutube from "@/utils/youtube.js";
+import { join } from 'path';
+import { writeFile } from 'fs/promises';
 
-export const config = {
-  api: {
-    bodyParser: false, // Disable Next.js built-in body parser
-  },
-};
 
-export async function POST(req, res) {
-  console.log("Processing upload ......");
+export async function POST(request) {
+  const data = await request.formData();
+  const file = data.get('video');
+  const title = data.get('title');
+  const description = data.get('description');
 
-  const formData = await req.formData();
-      // const filePath = req.file.path;
-      const video = formData.get('videoFilePath');
-      console.log(video);
-      const title = formData.get('title');
-      const description = formData.get('description');
-      console.log(title, description)
+  console.log(file, title, description);
 
-  upload.single('videoFilePath')(req, {}, async(err) =>{
-    if(err){
-      console.error('multer error:',err);
-      return new Response(JSON.stringify({message: 'upload failed', error: err.message}), {status:500});
-    }
-  })
+  if (!file) {
+    throw new Error('No file uploaded')
+  };
 
-  const token = await getToken({ req });
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
 
-  if (!token) {
-    return new Response(JSON.stringify({ message: 'Unauthorized' }),{status: 401});
-  }
+  const path = join('@/','uploads', file.name);
+  await (writeFile(path, buffer));
+  console.log(`${path}`);
 
-  if (req.method == 'POST') {
-    try {
-      // const formData = await req.formData();
-      // const filePath = req.file.path;
-      // const title = formData.get('title');
-      // const description = formData.get('description');
-      
-      console.log(filePath);
-
-      const response = await uploadVideo(token.accessToken, filePath, title, description);
-      return new Response(JSON.stringify(response), { status: 200 });
-    } catch (error) {
-      return new Response(JSON.stringify({ message: 'Video upload failed', error: error.message }), { status: 500 });
-    }
-  }
-  else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
+  return new Response(JSON.stringify({ message: "sucess" }), { status: 200 });
 }
+

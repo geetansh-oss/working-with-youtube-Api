@@ -8,32 +8,29 @@ export default function UploadPage() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const [videoFile, setVideoFile] = useState(null);
+  const [video, setVideo] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
   const handleUpload = async () => {
+
     const formData = new FormData();
-    formData.append('videoFilePath', videoFile);
+    formData.append('video', video);
     formData.append('title', title);
     formData.append('description', description);
-
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
 
     try {
       const response = await fetch('api/upload', {
         method: 'POST',
-        body: formData,
+        body: formData
       });
       if (response.ok) {
+        alert('video uploaded');
         router.push('/');
       }
     } catch (error) {
       console.error();
     }
-
   };
 
   if (!session) {
@@ -46,7 +43,7 @@ export default function UploadPage() {
       <input
         type="file"
         accept="video/*"
-        onChange={(e) => setVideoFile(e.target.files[0])}
+        onChange={(e) => setVideo(e.target.files[0])}
         required
       />
       <input

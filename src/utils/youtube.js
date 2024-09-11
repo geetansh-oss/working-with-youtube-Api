@@ -2,7 +2,7 @@
 import { google } from 'googleapis';
 import fs from 'fs';
 
-const uploadVideo = async (accessToken, videoFilePath, title, description) => {
+const uploadVideoYoutube = async (accessToken, videoFilePath, title, description) => {
   const oauth2Client = new google.auth.OAuth2();
   oauth2Client.setCredentials({ access_token: accessToken });
 
@@ -38,4 +38,4 @@ const uploadVideo = async (accessToken, videoFilePath, title, description) => {
     throw new Error('failed to upload video');
   }
 }
-export default uploadVideo;
+export default uploadVideoYoutube;
