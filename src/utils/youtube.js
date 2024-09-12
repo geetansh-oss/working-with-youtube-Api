@@ -1,6 +1,6 @@
 // lib/youtube.js
 import { google } from 'googleapis';
-import fs from 'fs';
+import {createReadStream} from 'fs';
 
 const uploadVideoYoutube = async (accessToken, videoFilePath, title, description) => {
   const oauth2Client = new google.auth.OAuth2();
@@ -25,7 +25,7 @@ const uploadVideoYoutube = async (accessToken, videoFilePath, title, description
         },
       },
       media: {
-        body: fs.createReadStream(videoFilePath),
+        body: createReadStream(videoFilePath),
       },
     });
 
@@ -34,7 +34,7 @@ const uploadVideoYoutube = async (accessToken, videoFilePath, title, description
     return response.data;
 
   } catch (error) {
-    console.error("Error during uploading: ",error);
+    console.error(`Error during uploading: ${error}`);
     throw new Error('failed to upload video');
   }
 }

@@ -12,7 +12,8 @@ export default function UploadPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleUpload = async () => {
+  const handleUpload = async (e) => {
+    e.preventDefault();
 
     const formData = new FormData();
     formData.append('video', video);
@@ -24,12 +25,23 @@ export default function UploadPage() {
         method: 'POST',
         body: formData
       });
+      console.log(response);
       if (response.ok) {
-        alert('video uploaded');
-        router.push('/');
+        const responseData = await response.json();
+        const uploadUrl = responseData.uploadUrl;
+
+        const awsResponse = await fetch(uploadUrl,{
+          method: 'PUT',
+          body: video
+        });
+        
+        if(awsResponse.ok){
+          alert("video uploaded to aws");
+        }
+        // router.push('/');
       }
     } catch (error) {
-      console.error();
+      console.error(error);
     }
   };
 
