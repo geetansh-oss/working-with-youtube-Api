@@ -14,21 +14,11 @@ export async function POST(req, res) {
   const token = await getToken({ req });
   const accessToken = token.accessToken;
 
-  console.log(file, title, description, accessToken);
-
   if (!file) {
     throw new Error('No file uploaded')
-  };
-
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  const path = join('./src/', 'uploads', file.name);
-  await (writeFile(path, buffer));
-  console.log(`${path}`);
+  }
 
   try {
-
     // uploadVideoYoutube(token, path, title, description);
     const uploadUrl = await putObject(`video-${Date.now()}.mp4`, 'video/mp4');
 

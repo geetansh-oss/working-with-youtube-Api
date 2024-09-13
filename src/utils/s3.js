@@ -15,7 +15,6 @@ const getObject = async(key) => {
     Bucket : "geet-02-videos",
     Key : key
   });
-
   const url = await getSignedUrl(s3Client, command);
   return url;
 }

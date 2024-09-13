@@ -37,8 +37,8 @@ export default function UploadPage() {
         
         if(awsResponse.ok){
           alert("video uploaded to aws");
+          router.push('/');
         }
-        // router.push('/');
       }
     } catch (error) {
       console.error(error);
