@@ -1,11 +1,18 @@
 'use client'
 
-import { getObject } from "@/utils/s3";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-// import uploadVideoYoutube from "@/utils/youtube";
+import { useSession } from "next-auth/react";;
 
-const handleUpload = async () => { }
+const handleUpload = async () => {
+  try {
+    const response = await fetch('api/uploadYoutube', {
+      method: 'GET'
+    })
+    console.log(response, "response from server");
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export default function Profile() {
   const [videoUrl, setVideoUrl] = useState();
@@ -17,9 +24,9 @@ export default function Profile() {
         method: 'GET',
       });
       if (response.ok) {
-        console.log(response);
         const data = await response.json();
         setVideoUrl(data.url);
+        console.log(data.url);
       }
     }
     fetchUrl();
@@ -38,7 +45,9 @@ export default function Profile() {
           <p>Loading video...</p>
         )}
       </div>
-      <button onClick={handleUpload}>upload video</button>
+      <button onClick={() => handleUpload(videoUrl)}>
+        upload video
+      </button>
     </div>
   )
 }

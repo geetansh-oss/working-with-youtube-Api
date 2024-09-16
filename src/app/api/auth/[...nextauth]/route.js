@@ -11,9 +11,9 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: 'https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-        },
-      },
+          scope: 'https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
+        }
+      }
     })
   ],
   secret: process.env.NEXTAUTH_SECRET,
@@ -24,7 +24,9 @@ const handler = NextAuth({
     async jwt({ token, account }) {
       if (account) {
         token.accessToken = account.access_token;
+        // token.refreshToken = account.refresh_token;
       }
+      // Check if the token is expired and refresh it
       return token;
     },
     async session({ session, token }) {

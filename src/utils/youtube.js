@@ -1,10 +1,12 @@
 // lib/youtube.js
 import { google } from 'googleapis';
-import {createReadStream} from 'fs';
 
 const uploadVideoYoutube = async (accessToken, videoFilePath, title, description) => {
   const oauth2Client = new google.auth.OAuth2();
-  oauth2Client.setCredentials({ access_token: accessToken });
+  oauth2Client.setCredentials({ 
+    access_token: accessToken 
+  });
+
 
   const youtube = google.youtube({
     version: 'v3',
@@ -25,7 +27,7 @@ const uploadVideoYoutube = async (accessToken, videoFilePath, title, description
         },
       },
       media: {
-        body: createReadStream(videoFilePath),
+        body: videoFilePath
       },
     });
 
